@@ -1,4 +1,4 @@
-import { createStore } from "redux";
+import { createStore } from "./redux";
 let counterValue = document.getElementById("counter-value");
 let incrementBtn = document.getElementById("add-btn");
 let decrementBtn = document.getElementById("minus-btn");
