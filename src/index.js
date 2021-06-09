@@ -1,7 +1,6 @@
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { createStore } from "./redux";
-let counterValue = document.getElementById("counter-value");
-let incrementBtn = document.getElementById("add-btn");
-let decrementBtn = document.getElementById("minus-btn");
 
 const ADD = "ADD";
 const MINUS = "MINUS";
@@ -19,17 +18,39 @@ const reducer = (oldState = initState, action) => {
 };
 let store = createStore(reducer /* , initState */);
 
-function render() {
-  let newState = store.getState();
-  console.log("重新渲染render", newState);
-  counterValue.innerHTML = newState.number + "";
-}
-incrementBtn.addEventListener("click", function () {
-  store.dispatch({ type: ADD });
-});
-decrementBtn.addEventListener("click", function () {
-  store.dispatch({ type: MINUS });
-});
+ class Counter extends Component {
+   unsubscribe;
+   state = { number: store.getState().number };
+   constructor(props) {
+     super(props);
+   }
+   componentDidMount() {
+     // 进行订阅
+     this.unsubscribe = store.subscribe(() =>
+       this.setState({ number: store.getState().number })
+     );
+   }
+   componentWillUnmount() {
+     this.unsubscribe();
+   }
+   render() {
+     return (
+       <div>
+         <p>{this.state.number}</p>
+         <button onClick={() => store.dispatch({ type: "ADD" })}>+</button>
+         <button onClick={() => store.dispatch({ type: "MINUS" })}>-</button>
+         <button
+           onClick={() => {
+             setTimeout(() => {
+               store.dispatch({ type: "ADD" });
+             }, 1000);
+           }}
+         >
+           1秒后加1
+         </button>
+       </div>
+     );
+   }
+ }
 
-store.subscribe(render);
-render();
+ReactDOM.render(<Counter />, document.getElementById("root"));
