@@ -1,0 +1,4 @@
+node_modules
+yarn.lock
+gitlog.txt
+package-lock.json
