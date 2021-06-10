@@ -21,6 +21,7 @@ const createStore = (reducer, preloadedState) => {
       listeners = listeners.filter((l) => l !== listener);
     }; // 返回取消订阅函数，方便后面取消订阅 当卸载组件时执行
   }
+  // 创建仓库的时候,会先派发一次 action, 让 reducer 设置的默认值生效
   dispatch({ type: "@@REDUX/INIT" });
   return {
     getState,
