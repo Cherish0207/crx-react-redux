@@ -7,6 +7,7 @@ export default function (oldState = initialState, action) {
     case types.ADD1:
       return { number: oldState.number + 5 };
     case types.MINUS1:
+    case types.MINUS:
       return { number: oldState.number - 5 };
     default:
       return oldState;

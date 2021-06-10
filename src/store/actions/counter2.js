@@ -7,5 +7,8 @@ const actions = {
   minus2() {
     return { type: types.MINUS2 };
   },
+  minus() {
+    return { type: types.MINUS };
+  },
 };
 export default actions;

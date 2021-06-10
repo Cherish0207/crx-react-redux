@@ -23,6 +23,7 @@ export default class Counter extends Component {
         <p>{this.state.number}</p>
         <button onClick={boundActions.add1}>+</button>
         <button onClick={boundActions.minus1}>-</button>
+        <button onClick={boundActions.minus}>-</button>
         <button
           onClick={() => {
             setTimeout(() => {
