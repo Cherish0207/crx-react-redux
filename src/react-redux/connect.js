@@ -43,17 +43,25 @@ function connect(mapStateToProps, mapDispatchToProps) {
 function connectClass(mapStateToProps, mapDispatchToProps) {
   return function (OldComponent) {
     // HOC 高阶组件
-    return function (props) {
-      const { store } = useContext(ReactReduxContext);
-      const { getState, dispatch, subscribe } = store;
-      const prevState = getState();
-      const stateProps = mapStateToProps(prevState);
-      const dispatchProps = bindActionCreators(mapDispatchToProps, dispatch);
-      const [, forceUpdate] = useReducer((x) => x + 1, 0);
-      useLayoutEffect(() => {
-        return subscribe(forceUpdate);
-      }, [subscribe]);
-      return <OldComponent {...props} {...stateProps} {...dispatchProps} />;
+    return class extends React.Component {
+      static contextType = ReactReduxContext;
+      componentDidMount() {
+        this.unsubscribe = this.context.store.subscribe(() => {
+          this.setState(() => this.forceUpdate());
+        });
+      }
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+      render() {
+        const { getState, dispatch } = this.context.store;
+        const prevState = getState();
+        const stateProps = mapStateToProps(prevState);
+        const dispatchProps = bindActionCreators(mapDispatchToProps, dispatch);
+        return (
+          <OldComponent {...this.props} {...stateProps} {...dispatchProps} />
+        );
+      }
     };
   };
 }
