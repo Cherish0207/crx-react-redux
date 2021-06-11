@@ -1,39 +1,27 @@
 import React, { Component } from "react";
-import { bindActionCreators } from "../redux";
 import actions from "../store/actions/counter2";
-import store from "../store";
-const boundActions = bindActionCreators(actions, store.dispatch);
-export default class Counter extends Component {
-  unsubscribe;
-  state = { number: store.getState().counter2.number };
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    // 进行订阅
-    this.unsubscribe = store.subscribe(() =>
-      this.setState({ number: store.getState().counter2.number })
-    );
-  }
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+import { connect } from "../react-redux";
+class Counter2 extends Component {
   render() {
     return (
       <div>
-        <p>{this.state.number}</p>
-        <button onClick={boundActions.add2}>+</button>
-        <button onClick={boundActions.minus2}>-</button>
+        <p>{this.props.number}</p>
+        <button onClick={this.props.add2}>+</button>
+        <button onClick={this.props.minus2}>-</button>
+        <button onClick={this.props.minus}>-</button>
         <button
           onClick={() => {
             setTimeout(() => {
-              boundActions.add2();
+              this.props.add2();
             }, 1000);
           }}
         >
-          1秒后加2
+          1秒后加5
         </button>
       </div>
     );
   }
 }
+let mapStateToProps = (state) => state.counter2;
+// 这是一个映射函数,可以把仓库的状态进行映射出来分状态,分状态会成为组件属性对象
+export default connect(mapStateToProps, actions)(Counter2);
