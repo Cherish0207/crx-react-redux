@@ -2,7 +2,7 @@ import * as types from "../action-types";
 
 let initialState = { number: 2 };
 
-export default function (oldState = initialState, action) {
+export default function counterReducer2(oldState = initialState, action) {
   switch (action.type) {
     case types.ADD2:
       return { number: oldState.number + 2 };
