@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector, useDispatch } from "../react-redux";
 /**
  * 前面redux的工作流程是由dispatch触发action后，直接去reducer执行相应的动作 --- 同步操作
- * 
+ *
  * 但在某些复杂的业务逻辑中，这种同步的实现方式并不能很好的解决问题。
- * 
+ *
  * 比如我们有一个这样的需求，点击按钮 -> 获取服务器数据 -> 渲染视图
  * 因为获取服务器数据需要异步实现，这时候就需要引入中间件改变redux同步执行的流程，形成异步流程
  * 有了中间件，redux的工作流程就变成 action -> middlewares -> reducer，
@@ -17,7 +17,17 @@ function Counter1() {
   let state = useSelector((state) => state.list);
   return (
     <div>
-      <button onClick={() => dispatch({ type: "SEARCH" })}>1秒后显示数据</button>
+      <button
+        onClick={() =>
+          dispatch((dispatch, getState) => {
+            setTimeout(() => {
+              dispatch({ type: "SEARCH" });
+            }, 1000);
+          })
+        }
+      >
+        1秒后显示数据
+      </button>
       {state.list.map((item) => (
         <li>{item.name}</li>
       ))}
